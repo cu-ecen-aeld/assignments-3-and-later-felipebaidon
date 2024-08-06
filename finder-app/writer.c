@@ -9,15 +9,16 @@ int main(int argc, char **argv)
 {
 	int fd, nr;
 	
-	if( argc < 2)
+	if( argc == 0)
 	{
 		syslog(LOG_ERR, "Unsuficient arguments!");
 		return 1;
 	}
 
-	puts("Test");
 
 	fd = open(argv[1], O_RDWR| O_CREAT);
+
+
 
 	if(fd == -1)
 	{
