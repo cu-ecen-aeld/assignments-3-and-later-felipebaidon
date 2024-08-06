@@ -9,10 +9,10 @@ int main(int argc, char **argv)
 {
 	int fd, nr;
 	
-	if( argc == 0)
+	if( argc < 1)
 	{
 		syslog(LOG_ERR, "Unsuficient arguments!");
-		return 1;
+		exit(1);
 	}
 
 
