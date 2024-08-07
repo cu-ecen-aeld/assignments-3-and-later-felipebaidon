@@ -9,10 +9,11 @@ int main(int argc, char **argv)
 {
 	int fd, nr;
 	
-	if( argc < 1)
+	if( argv[1] == NULL || argv[2] == NULL)
 	{
 		syslog(LOG_ERR, "Unsuficient arguments!");
-		exit(1);
+		puts("Unsuficient arguments!");
+		exit(EXIT_FAILURE);
 	}
 
 
@@ -24,7 +25,8 @@ int main(int argc, char **argv)
 	{
 
 		syslog(LOG_ERR, "file could not be open!"); //ToDo: explicitly state name of file 
-		return 1;
+	
+		exit(EXIT_FAILURE);
 	}
 
 	nr =write(fd, argv[2], strlen(argv[2]));
@@ -33,10 +35,11 @@ int main(int argc, char **argv)
 	{
 
 		syslog(LOG_ERR, "Could not write to file"); //ToDo: explicitly state name of file 
-		return 1;
+
+		exit(EXIT_FAILURE);
 
 	}
 
-	return 0;
+	exit(EXIT_SUCCESS);
 }
 	
