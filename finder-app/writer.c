@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 	}
 
 
-	fd = open(argv[1], O_RDWR| O_CREAT);
+	fd = open(argv[1], O_CREAT|O_RDWR, 0644);
 
 
 
@@ -38,6 +38,13 @@ int main(int argc, char **argv)
 
 		exit(EXIT_FAILURE);
 
+	}
+
+	if( close(fd) == -1)
+	{
+		
+		syslog(LOG_ERR, "Error to close file!"); //ToDo: explicitly state name of file
+	        exit(EXIT_FAILURE);
 	}
 
 	exit(EXIT_SUCCESS);
