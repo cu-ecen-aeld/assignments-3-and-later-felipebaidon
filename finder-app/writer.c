@@ -13,7 +13,7 @@ int main(int argc, char **argv)
 	{
 		syslog(LOG_ERR, "Unsuficient arguments!");
 		puts("Unsuficient arguments!");
-		exit(EXIT_FAILURE);
+	        return 1;	
 	}
 
 
