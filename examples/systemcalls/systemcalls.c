@@ -1,5 +1,5 @@
 #include "systemcalls.h"
-
+#include <string.h>
 /**
  * @param cmd the command to execute with system()
  * @return true if the command in @param cmd was executed
@@ -10,14 +10,12 @@
 bool do_system(const char *cmd)
 {
 
-/*
- * TODO  add your code here
- *  Call the system() function with the command set in the cmd
- *   and return a boolean true if the system() call completed with success
- *   or false() if it returned a failure
-*/
+    bool result  = false;
 
-    return true;
+    if(system( cmd) != -1)
+	    result = true;
+
+    return result;
 }
 
 /**
@@ -39,29 +37,59 @@ bool do_exec(int count, ...)
     va_list args;
     va_start(args, count);
     char * command[count+1];
-    int i;
+    int i, status;
+    pid_t pid, finishedPid;
+    bool ret  = false;
+
     for(i=0; i<count; i++)
     {
         command[i] = va_arg(args, char *);
     }
     command[count] = NULL;
-    // this line is to avoid a compile warning before your implementation is complete
-    // and may be removed
-    command[count] = command[count];
+    
+    fflush(stdout);
+    pid = fork();
 
-/*
- * TODO:
- *   Execute a system command by calling fork, execv(),
- *   and wait instead of system (see LSP page 161).
- *   Use the command[0] as the full path to the command to execute
- *   (first argument to execv), and use the remaining arguments
- *   as second argument to the execv() command.
- *
-*/
+    if(pid == -1)
+    {
+	    perror("fork");
+    }
+    else if( pid > 0)
+    {
+	    printf("do_exec: I am the parent of pid %d\n", pid);
+	    finishedPid = waitpid(pid, &status, 0);
+	    printf("do_exec: child %d returned with status: %d\n", finishedPid, status);
+
+	    if(finishedPid == -1)
+	    {
+		   perror("wait");
+    	    }
+   	    else
+        	{
+			if(WIFEXITED (status))
+			{
+				printf("do_exec: Normal termination with exit status %d\n", WEXITSTATUS(status));
+				printf("do_exec: pid of terminated child is: %d\n", finishedPid);
+			
+				if(!WEXITSTATUS(status))
+					ret = true;	
+			}
+		}
+    }
+    else
+    {
+	    printf("do_exec: I am the child %d\n", pid);
+
+	    if(execv(command[0], command) == -1)
+	    {
+            	perror("execv");
+		puts("error returning false");
+	        exit(EXIT_FAILURE);	
+	    }
+    }
 
     va_end(args);
-
-    return true;
+    return ret;
 }
 
 /**
@@ -74,7 +102,9 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     va_list args;
     va_start(args, count);
     char * command[count+1];
-    int i;
+    int i, ret, status, fd;
+    pid_t pid, finishedPid;
+    
     for(i=0; i<count; i++)
     {
         command[i] = va_arg(args, char *);
@@ -84,16 +114,62 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
     // and may be removed
     command[count] = command[count];
 
+   fd = open( outputfile, O_CREAT| O_WRONLY, 0644);
+   if (fd < 0) 
+   {
+	perror("open");
+	return false;
+   }
 
-/*
- * TODO
- *   Call execv, but first using https://stackoverflow.com/a/13784315/1446624 as a refernce,
- *   redirect standard out to a file specified by outputfile.
- *   The rest of the behaviour is same as do_exec()
- *
-*/
+    fflush(stdout);
+    pid = fork();
+
+    if(pid == -1)
+    {
+	    close(fd);
+	    perror("fork");
+	    return false;
+    }
+    else if( pid > 0)
+    {
+	    printf("exec_redirect: I am the parent of pid %d\n", pid);
+	    finishedPid = waitpid(pid, &status, 0);
+	    if(finishedPid == -1)
+	    {
+		   perror("wait");
+    	    }
+   	    else
+        	{
+			if(WIFEXITED (status))
+				printf("exec_redirect: Normal termination with exit status %d\n", WEXITSTATUS(status));
+
+			printf("exec_redirect: pid of terminated child is: %d\n", finishedPid);
+			
+			if(!WEXITSTATUS(status))
+				ret = true;
+	    close(fd);
+	
+		}
+    }
+    else
+    {
+
+	    printf("exec_redirect: I am the child %d\n", pid);
+
+	    if(dup2(fd,1) < 0)
+	    {
+		    perror("dup2");
+		    exit(EXIT_FAILURE); 
+	    }
+
+
+	    close(fd);
+	    ret = execv(command[0],command);
+	    perror("execv");
+            exit(EXIT_FAILURE); 
+    }
 
     va_end(args);
 
-    return true;
+    return ret;
 }
