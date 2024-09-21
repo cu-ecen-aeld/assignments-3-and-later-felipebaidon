@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 	if(fd == -1)
 	{
 
-		syslog(LOG_ERR, "file could not be open!"); //ToDo: explicitly state name of file 
+		syslog(LOG_ERR, "file could not be open!");  
 	
 		exit(EXIT_FAILURE);
 	}
