@@ -99,8 +99,8 @@ ${CROSS_COMPILE}readelf -a busybox | grep "Shared library"
 # TODO: Clean and build the writer utility
   cd  ${FINDER_APP_DIR}
   pwd
-  make clean
-  make default "CROSS_COMPILE"=${CROSS_COMPILE}
+  sudo make clean
+  sudo make default "CROSS_COMPILE"=${CROSS_COMPILE}
   cp writer ${OUTDIR}/rootfs/home 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
