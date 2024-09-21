@@ -5,7 +5,7 @@ CROSS_COMPILE?=
 default: writer.out
 writer.out:
 	${CROSS_COMPILE}gcc writer.c -o writer
-
+	chmod 777 writer
 
 .PHONY: clean 
 clean: 
