@@ -11,7 +11,7 @@ KERNEL_VERSION=v5.1.10
 BUSYBOX_VERSION=1_33_1
 FINDER_APP_DIR=$(realpath $(dirname $0))
 ARCH=arm64
-CROSS_COMPILE=aarch64-none-linux-gnu-
+export CROSS_COMPILE=aarch64-none-linux-gnu-
 export SYSROOT=$(aarch64-none-linux-gnu-gcc -print-sysroot)
 
 if [ $# -lt 1 ]
@@ -100,7 +100,7 @@ ${CROSS_COMPILE}readelf -a busybox | grep "Shared library"
   cd  ${FINDER_APP_DIR}
   pwd
   sudo make clean
-  sudo make default "CROSS_COMPILE"=${CROSS_COMPILE}
+  sudo make default "CROSS_COMPILE=/home/parallels/arm-cross-compiler/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu/bin/"${CROSS_COMPILE}
   cp writer ${OUTDIR}/rootfs/home 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
