@@ -86,10 +86,10 @@ ${CROSS_COMPILE}readelf -a busybox | grep "Shared library"
 
 # TODO: Add library dependencies to rootfs
   echo " sysroot path: $SYSROOT"
-  cp -a ${SYSROOT}/lib/ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib
-  cp -a ${SYSROOT}/lib64/libm.so.6 ${OUTDIR}/rootfs/lib64
-  cp -a ${SYSROOT}/lib64/libresolv.so.2 ${OUTDIR}/rootfs/lib64
-  cp -a ${SYSROOT}/lib64/libc.so.6 ${OUTDIR}/rootfs/lib64
+  cp ${SYSROOT}/lib/ld-linux-aarch64.so.1 ${OUTDIR}/rootfs/lib
+  cp ${SYSROOT}/lib64/libm.so.6 ${OUTDIR}/rootfs/lib64
+  cp ${SYSROOT}/lib64/libresolv.so.2 ${OUTDIR}/rootfs/lib64
+  cp ${SYSROOT}/lib64/libc.so.6 ${OUTDIR}/rootfs/lib64
 
 # TODO: Make device nodes
   cd ../rootfs
@@ -104,11 +104,11 @@ ${CROSS_COMPILE}readelf -a busybox | grep "Shared library"
   cp writer ${OUTDIR}/rootfs/home 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
-  cp -a finder.sh ${OUTDIR}/rootfs/home
-  cp -a finder-test.sh ${OUTDIR}/rootfs/home
+  cp finder.sh ${OUTDIR}/rootfs/home
+  cp finder-test.sh ${OUTDIR}/rootfs/home
   mkdir ${OUTDIR}/rootfs/home/conf
-  cp -a conf/assignment.txt ${OUTDIR}/rootfs/home/conf
-  cp -a conf/username.txt ${OUTDIR}/rootfs/home/conf
+  cp conf/assignment.txt ${OUTDIR}/rootfs/home/conf
+  cp conf/username.txt ${OUTDIR}/rootfs/home/conf
   cp autorun-qemu.sh ${OUTDIR}/rootfs/home
 # TODO: Chown the root directory
   sudo chown -R root ${OUTDIR}/rootfs
