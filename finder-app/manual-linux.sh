@@ -99,8 +99,8 @@ ${CROSS_COMPILE}readelf -a busybox | grep "Shared library"
 # TODO: Clean and build the writer utility
   cd  ${FINDER_APP_DIR}
   pwd
-  sudo make clean
-  sudo make default "CROSS_COMPILE=/home/parallels/arm-cross-compiler/arm-gnu-toolchain-13.3.rel1-x86_64-aarch64-none-linux-gnu/bin/"${CROSS_COMPILE}
+  make clean
+  make default "CROSS_COMPILE="${CROSS_COMPILE}
   cp writer ${OUTDIR}/rootfs/home 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
