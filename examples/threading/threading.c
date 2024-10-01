@@ -56,7 +56,6 @@ bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,int 
      * See implementation details in threading.h file comment block
      */
 
-     pthread_attr_t attr;
      int retval = 0;
 
      //puts("PERFORMING MEMORY ALLOCATION");   
@@ -68,30 +67,6 @@ bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,int 
 
      }
       
-     retval = pthread_attr_init(&attr);
-
-     if(retval)
-     {
-	     errno = retval;
-	     perror("pthread_attr_init");
-	     return false;
-     }
-
-     retval = pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-     if(retval)
-     {
-	     errno = retval;
-	     perror("pthread_attr_setdetachedstate");
-	     return false;
-     }
-
-     retval = pthread_mutex_init(mutex, NULL);
-     if(retval)
-     {
-	     errno = retval;
-	     perror("pthread_mutex_init");
-	     return false;
-     }
 
      //puts("MEMORY ALLOCATION SUCCESFULL");   
      thread_func_args -> wait_to_release_us = (unsigned int)(wait_to_release_ms * 1000);
@@ -101,7 +76,7 @@ bool start_thread_obtaining_mutex(pthread_t *thread, pthread_mutex_t *mutex,int 
 
      //puts("STARTING THREAD");   
 
-     retval = pthread_create(thread, &attr, threadfunc, (void*)thread_func_args);
+     retval = pthread_create(thread, NULL , threadfunc, (void*)thread_func_args);
 
      if(retval)
      {
